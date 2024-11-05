@@ -1,24 +1,12 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static Facade_Pattern.DeliveryStatusTracker;
 
 namespace Facade_Pattern
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private DeliveryFacade _deliveryFacade;
+        private readonly DeliveryFacade _deliveryFacade;
 
         public MainWindow()
         {
@@ -26,11 +14,29 @@ namespace Facade_Pattern
             _deliveryFacade = new DeliveryFacade();
         }
 
-        private void PlaceOrderButton_Click(object sender, RoutedEventArgs e)
+        private void AddOrderButton_Click(object sender, RoutedEventArgs e)
         {
             string orderDetails = OrderDetailsTextBox.Text;
-            _deliveryFacade.PlaceOrder(orderDetails);
-            MessageBox.Show("Заказ размещён.");
+            if (double.TryParse(DistanceTextBox.Text, out double distance) &&
+                double.TryParse(WeightTextBox.Text, out double weight))
+            {
+                // Используем PlaceOrder и сохраняем ID заказа
+                int orderId = _deliveryFacade.PlaceOrder(orderDetails);
+                double deliveryCost = _deliveryFacade.GetDeliveryCost(distance, weight);
+
+                string orderInfo = $"ID: {orderId}, Детали: {orderDetails}, " +
+                                   $"Расстояние: {distance} км, Вес: {weight} кг, Стоимость: {deliveryCost} руб.";
+                OrderListBox.Items.Add(orderInfo);
+
+                // Очищаем поля ввода
+                OrderDetailsTextBox.Clear();
+                DistanceTextBox.Clear();
+                WeightTextBox.Clear();
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, введите корректное расстояние и вес.");
+            }
         }
 
         private void CalculateCostButton_Click(object sender, RoutedEventArgs e)
@@ -38,7 +44,7 @@ namespace Facade_Pattern
             if (double.TryParse(DistanceTextBox.Text, out double distance) &&
                 double.TryParse(WeightTextBox.Text, out double weight))
             {
-                double cost = _deliveryFacade.GetDeliveryCost(distance, weight);
+                double cost = _deliveryFacade.GetDeliveryCost(distance,weight);
                 CostResultTextBlock.Text = $"Стоимость доставки: {cost:C}";
             }
             else
@@ -47,13 +53,25 @@ namespace Facade_Pattern
             }
         }
 
+        private void CheckOrderInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(OrderIdTextBox.Text, out int orderId))
+            {
+                string orderInfo = _deliveryFacade.GetOrderInfo(orderId);
+                StatusResultTextBlock.Text = orderInfo;
+            }
+            else
+            {
+                MessageBox.Show("Введите корректный ID заказа.");
+            }
+        }
+
         private void CheckStatusButton_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(OrderIdTextBox.Text, out int orderId))
             {
                 DeliveryStatus status = _deliveryFacade.GetOrderStatus(orderId);
-                var localizedStatus = _deliveryFacade.GetLocalizedStatus(status).ToString();
-                StatusResultTextBlock.Text = $"Статус заказа: {localizedStatus}";
+                StatusResultTextBlock.Text = $"Статус заказа: {_deliveryFacade.GetLocalizedStatus(status)}";
             }
             else
             {
@@ -67,7 +85,7 @@ namespace Facade_Pattern
                 Enum.TryParse(StatusComboBox.Text, out DeliveryStatus newStatus))
             {
                 _deliveryFacade.UpdateOrderStatus(orderId, newStatus);
-                StatusResultTextBlock.Text = $"Статус обновлен: {newStatus}";
+                StatusResultTextBlock.Text = $"Статус обновлен: {_deliveryFacade.GetLocalizedStatus(newStatus)}";
             }
             else
             {

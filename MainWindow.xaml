@@ -1,46 +1,28 @@
 ﻿<Window x:Class="Facade_Pattern.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Служба доставки" Height="450" Width="500">
+        Title="Delivery Service" Height="450" Width="800">
     <Grid Margin="10">
-        <!-- Ввод информации о заказе -->
-        <TextBlock Text="Детали заказа:" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <TextBox x:Name="OrderDetailsTextBox" Width="300" Height="25" Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-
-        <!-- Расчёт стоимости доставки -->
-        <TextBlock Text="Расстояние (км):" Margin="0,60,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <TextBox x:Name="DistanceTextBox" Width="100" Height="25" Margin="100,60,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-
-        <TextBlock Text="Вес (кг):" Margin="0,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <TextBox x:Name="WeightTextBox" Width="100" Height="25" Margin="50,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-
-        <!-- Кнопка для расчёта стоимости -->
-        <Button Content="Рассчитать стоимость" Width="150" Height="30" Margin="0,140,0,0"
-                VerticalAlignment="Top" HorizontalAlignment="Left" Click="CalculateCostButton_Click" />
-
-        <!-- Отображение результата расчёта стоимости -->
-        <TextBlock x:Name="CostResultTextBlock" Margin="0,180,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-
-        <!-- Кнопка для размещения заказа -->
-        <Button Content="Разместить заказ" Width="150" Height="30" Margin="0,220,0,0"
-                VerticalAlignment="Top" HorizontalAlignment="Left" Click="PlaceOrderButton_Click" />
-
-        <!-- Кнопка для получения статуса заказа -->
-        <TextBlock Text="ID заказа:" Margin="0,260,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <TextBox x:Name="OrderIdTextBox" Width="100" Height="25" Margin="60,260,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-
-        <ComboBox x:Name="StatusComboBox" Width="150" Height="25" Margin="10,300,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <ComboBoxItem Content="OrderPlaced" />
-            <ComboBoxItem Content="Processing" />
-            <ComboBoxItem Content="InTransit" />
-            <ComboBoxItem Content="Delivered" />
-            <ComboBoxItem Content="Canceled" />
-        </ComboBox>
-
-        <Button Content="Обновить статус" Width="150" Height="30" Margin="0,330,0,0"
-        VerticalAlignment="Top" HorizontalAlignment="Left" Click="UpdateStatusButton_Click" />
-        
-        <TextBlock x:Name="StatusResultTextBlock" Margin="0,380,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <TextBox x:Name="OrderDetailsTextBox" Width="200" Height="30"/>
+            <TextBox x:Name="DistanceTextBox" Width="200" Height="30"/>
+            <TextBox x:Name="WeightTextBox" Width="200" Height="30"/>
+            <Button Content="Добавить заказ" Width="200" Click="AddOrderButton_Click"/>
+            <Button Content="Рассчитать стоимость" Width="200" Click="CalculateCostButton_Click"/>
+            <TextBlock x:Name="CostResultTextBlock" Width="200" Text="Стоимость доставки: "/>
+            <TextBox x:Name="OrderIdTextBox" Width="200"/>
+            <Button Content="Проверить информацию о заказе" Width="200" Click="CheckOrderInfoButton_Click"/>
+            <Button Content="Проверить статус" Width="200" Click="CheckStatusButton_Click"/>
+            <ComboBox x:Name="StatusComboBox" Width="200" Height="30">
+                <ComboBoxItem Content="OrderPlaced"/>
+                <ComboBoxItem Content="Processing"/>
+                <ComboBoxItem Content="InTransit"/>
+                <ComboBoxItem Content="Delivered"/>
+                <ComboBoxItem Content="Canceled"/>
+            </ComboBox>
+            <Button Content="Обновить статус" Width="200" Click="UpdateStatusButton_Click"/>
+            <ListBox x:Name="OrderListBox" Width="400" Height="150"/>
+            <TextBlock x:Name="StatusResultTextBlock" Width="400"/>
+        </StackPanel>
     </Grid>
 </Window>
-
